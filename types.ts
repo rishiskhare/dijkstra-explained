@@ -18,7 +18,7 @@ export interface Step {
   edges: Edge[];
   fringe: Array<[number, number]>;
   currentVertex: number | null;
-  distTo: number[];
-  edgeTo: number[];
+  distTo: Map<number, number>;
+  edgeTo: Map<number, number>;
 }
 

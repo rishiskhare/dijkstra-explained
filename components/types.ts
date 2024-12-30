@@ -11,13 +11,15 @@ export interface Edge {
   to: number;
   weight: number;
   active: boolean;
+  tempWeight?: string;
 }
 
 export interface Step {
   vertices: Vertex[];
   edges: Edge[];
-  fringe: [number, number][];
+  fringe: Array<[number, number]>;
   currentVertex: number | null;
-  distTo: number[];
-  edgeTo: number[];
+  distTo: Map<number, number>;
+  edgeTo: Map<number, number>;
 }
+

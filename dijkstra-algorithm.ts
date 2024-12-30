@@ -93,9 +93,9 @@ class MinHeap {
   }
 }
 
-export function generateSteps(): Step[] {
+export function generateSteps(customVertices?: Vertex[], customEdges?: Edge[], startNode: number = 0): Step[] {
   // Initial graph setup
-  const initialVertices: Vertex[] = [
+  const initialVertices: Vertex[] = customVertices || [
     { id: 0, distance: 0, processed: false, x: 100, y: 200 },
     { id: 1, distance: Infinity, processed: false, x: 300, y: 100 },
     { id: 2, distance: Infinity, processed: false, x: 300, y: 300 },
@@ -105,7 +105,7 @@ export function generateSteps(): Step[] {
     { id: 6, distance: Infinity, processed: false, x: 700, y: 200 },
   ];
 
-  const edges: Edge[] = [
+  const edges: Edge[] = customEdges || [
     { from: 0, to: 1, weight: 2, active: false },
     { from: 0, to: 2, weight: 1, active: false },
     { from: 1, to: 3, weight: 11, active: false },
@@ -121,15 +121,18 @@ export function generateSteps(): Step[] {
   ];
 
   const steps: Step[] = [];
-  const distTo = Array(7).fill(Infinity);
-  const edgeTo = Array(7).fill(-1);
+  const distTo = new Map<number, number>();
+  const edgeTo = new Map<number, number>();
+  initialVertices.forEach(v => {
+    distTo.set(v.id, v.id === startNode ? 0 : Infinity);
+    edgeTo.set(v.id, -1);
+  });
 
   // Initialize fringe with all vertices
   const fringe = new MinHeap();
   initialVertices.forEach(vertex => {
-    const distance = vertex.id === 0 ? 0 : Infinity;
+    const distance = vertex.id === startNode ? 0 : Infinity;
     fringe.insert([vertex.id, distance]);
-    distTo[vertex.id] = distance;
   });
 
   steps.push({
@@ -137,14 +140,14 @@ export function generateSteps(): Step[] {
     edges: [...edges],
     fringe: fringe.copy().toArray(),
     currentVertex: null,
-    distTo: [...distTo],
-    edgeTo: [...edgeTo],
+    distTo: new Map(distTo),
+    edgeTo: new Map(edgeTo),
   });
 
   while (!fringe.isEmpty()) {
     const [v, dist] = fringe.extractMin()!;
 
-    if (dist > distTo[v]) continue;
+    if (dist > distTo.get(v)!) continue;
 
     const currentVertices = steps[steps.length - 1].vertices.map(vertex => ({
       ...vertex,
@@ -160,10 +163,11 @@ export function generateSteps(): Step[] {
     edges
       .filter(e => e.from === v)
       .forEach(e => {
-        if (distTo[e.to] > distTo[v] + e.weight) {
-          distTo[e.to] = distTo[v] + e.weight;
-          edgeTo[e.to] = v;
-          fringe.updateKey(e.to, distTo[e.to]);
+        const newDist = distTo.get(v)! + e.weight;
+        if (newDist < (distTo.get(e.to) ?? Infinity)) {
+          distTo.set(e.to, newDist);
+          edgeTo.set(e.to, v);
+          fringe.updateKey(e.to, newDist);
         }
       });
 
@@ -173,8 +177,8 @@ export function generateSteps(): Step[] {
       edges: currentEdges,
       fringe: fringe.copy().toArray(),
       currentVertex: v,
-      distTo: [...distTo],
-      edgeTo: [...edgeTo],
+      distTo: new Map(distTo),
+      edgeTo: new Map(edgeTo),
     });
   }
 
