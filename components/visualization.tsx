@@ -201,7 +201,7 @@ export default function DijkstraVisualization() {
                 </span>
               </h1>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm text-center bg-white text-gray-900">
+            <TooltipContent className="max-w-sm text-center">
               <p>
                 This site was inspired by{' '}
                 <a
