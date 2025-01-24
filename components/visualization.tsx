@@ -107,8 +107,8 @@ export default function DijkstraVisualization() {
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
-    setSteps(generateSteps(undefined, undefined, startNode))
-  }, [startNode])
+    setSteps(generateSteps(undefined, undefined, 0))
+  }, [])
 
   const resetVisualization = (newVertices: Vertex[], newEdges: Edge[], newStartNode: number) => {
     const resetVertices = newVertices.map(vertex => ({ ...vertex, processed: false }));
@@ -241,7 +241,8 @@ export default function DijkstraVisualization() {
       ) : (
         <>
           <div className="flex flex-col lg:flex-row lg:items-start gap-8 w-full">
-            <Card className="w-full lg:flex-grow p-4">
+            <div className="w-full lg:w-3/4 xl:w-4/5 flex flex-col">
+              <Card className="w-full p-4 mb-4">
               <div className="flex justify-end mb-4 pb-4 border-b border-gray-200">
                 <Button onClick={() => setEditMode(true)} variant="outline" className="text-sm">
                   Edit Graph
@@ -374,6 +375,26 @@ export default function DijkstraVisualization() {
               </div>
             </Card>
 
+            <div className="hidden lg:flex justify-center mt-4 space-x-4">
+                <Button
+                  onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                  disabled={currentStep === 0}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Previous
+                </Button>
+                <Button
+                  onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
+                  disabled={currentStep === steps.length - 1}
+                  className="flex items-center"
+                >
+                  Next
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </div>
+
             <Card className="w-full lg:w-1/4 xl:w-1/5 p-4 lg:h-auto lg:flex lg:flex-col">
               <div className="overflow-auto">
                 <div className="font-mono">
@@ -438,24 +459,26 @@ export default function DijkstraVisualization() {
         </div>
       )}
       {!editMode && (
-        <div className="flex justify-center mt-4 space-x-4">
-          <Button
-            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0}
-            className="flex items-center"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Previous
-          </Button>
-          <Button
-            onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
-            disabled={currentStep === steps.length - 1}
-            className="flex items-center"
-          >
-            Next
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
+        <>
+          <div className="flex lg:hidden justify-center mt-4 space-x-4">
+            <Button
+              onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+              disabled={currentStep === 0}
+              className="flex items-center"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Previous
+            </Button>
+            <Button
+              onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
+              disabled={currentStep === steps.length - 1}
+              className="flex items-center"
+            >
+              Next
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </>
       )}
     </div>
   )

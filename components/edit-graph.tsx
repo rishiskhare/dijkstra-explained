@@ -137,6 +137,10 @@ export default function EditGraph({ vertices, edges, startNode: initialStartNode
   }
 
   const deleteNode = (id: number) => {
+    if (id === startNode) {
+      alert("Cannot delete the starting node. Please change the starting node first.")
+      return
+    }
     setEditedVertices(editedVertices.filter(v => v.id !== id))
     setEditedEdges(editedEdges.filter(e => e.from !== id && e.to !== id))
   }
@@ -146,6 +150,10 @@ export default function EditGraph({ vertices, edges, startNode: initialStartNode
     setShowEdgePopup(false)
   }
 
+  const handleStartNodeChange = (value: string) => {
+    setStartNode(Number.parseInt(value, 10))
+  }
+
   return (
     <div className="flex flex-col space-y-4">
       <Card className="w-full p-4">
@@ -153,10 +161,7 @@ export default function EditGraph({ vertices, edges, startNode: initialStartNode
           <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 pb-4 border-b border-gray-200">
             <div className="flex items-center space-x-4 w-full sm:w-auto justify-center sm:justify-start">
               <span className="text-sm font-medium">Starting node:</span>
-              <Select
-                value={startNode.toString()}
-                onValueChange={(value) => setStartNode(parseInt(value, 10))}
-              >
+              <Select value={startNode.toString()} onValueChange={handleStartNodeChange}>
                 <SelectTrigger className="w-[60px]">
                   <SelectValue>{startNode}</SelectValue>
                 </SelectTrigger>
@@ -182,7 +187,7 @@ export default function EditGraph({ vertices, edges, startNode: initialStartNode
               </Button>
             </div>
           </div>
-          <div className="w-full aspect-[2/1]">
+          <div className="w-full aspect-[2/1] lg:aspect-[3/1]">
             <svg
               ref={svgRef}
               viewBox="0 0 900 400"
