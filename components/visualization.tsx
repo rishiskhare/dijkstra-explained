@@ -189,7 +189,7 @@ export default function DijkstraVisualization() {
   const nodeEdgePositions = getNodeEdgePositions(step.edges, step.vertices);
 
   return (
-    <div className="container mx-auto px-4 sm:px-8 xl:px-16 2xl:px-24 relative mt-8">
+    <div className="container mx-auto px-4 sm:px-8 xl:px-16 2xl:px-24 relative mt-8 mb-8">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 lg:items-start lg:justify-center lg:gap-4">
         <TooltipProvider delayDuration={0}>
           <Tooltip>
