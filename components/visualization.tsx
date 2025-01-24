@@ -245,7 +245,7 @@ export default function DijkstraVisualization() {
               <Card className="w-full p-4 mb-4">
               <div className="flex justify-end mb-4 pb-4 border-b border-gray-200">
                 <Button onClick={() => setEditMode(true)} variant="outline" className="text-sm">
-                  Edit Graph
+                  Customize Graph
                 </Button>
               </div>
               <div className="w-full aspect-[2/1]">
